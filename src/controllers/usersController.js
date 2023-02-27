@@ -55,7 +55,51 @@ exports.authenticateUser = async (req, res) => {
   }
 };
 
-
+// Agrega una película a la lista de favoritos del usuario
+exports.addFavorite = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const movieId = req.body.movieId;
+      const user = await User.findByPk(userId);
+  
+      if (!user) {
+        return res.status(404).send({ message: 'Usuario no encontrado' });
+      }
+  
+      const movie = await Movie.findByPk(movieId);
+      if (!movie) {
+        return res.status(404).send({ message: 'Película no encontrada' });
+      }
+  
+      await user.addFavorite(movie);
+      res.send({ message: 'Película agregada a favoritos' });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  };
+  
+  // Elimina una película de la lista de favoritos del usuario
+  exports.removeFavorite = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const movieId = req.params.movieId;
+      const user = await User.findByPk(userId);
+  
+      if (!user) {
+        return res.status(404).send({ message: 'Usuario no encontrado' });
+      }
+  
+      const movie = await Movie.findByPk(movieId);
+      if (!movie) {
+        return res.status(404).send({ message: 'Película no encontrada' });
+      }
+  
+      await user.removeFavorite(movie);
+      res.send({ message: 'Película eliminada de favoritos' });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  };
 
 exports.logout = (req, res) => {
   req.session.destroy();

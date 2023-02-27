@@ -38,6 +38,9 @@ const genresRoutes = require('./routes/genresRoutes');
 
 const reviewsRoutes = require('./routes/reviewsRoutes');
     app.use('/api', reviewsRoutes);
+
+const indexRoutes = require('./routes/indexRoutes');
+    app.use('/', indexRoutes);
     
     
 app.listen(3000, () => console.log('Server running on port 3000'));
