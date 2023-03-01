@@ -1,0 +1,17 @@
+<%-include ('header') -%>
+<body>
+    <section>
+      <div class="conteiner">
+        <div class="content">
+          <h2>Peliculas</h2>
+          <ul>
+            <% for (let i=0 ; i < movies.length ; i++) { %>
+            <li>
+              <a href="/movies/<%=movies[i].id%>"><%=movies[i].title %></a>
+            </li>
+            <% } %>
+          </ul>
+        </div>
+      </div>
+   </section>
+  </body>

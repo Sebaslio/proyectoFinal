@@ -5,7 +5,7 @@ module.exports = (sequelize, dataTypes) => {
 
         id: {
 
-            type: dataTypes.INTEFER,
+            type: dataTypes.INTEGER,
             primaryKey: true,
             autoincrement: true,
         },
@@ -33,7 +33,7 @@ module.exports = (sequelize, dataTypes) => {
       };
 
       let config = {
-        ableName: 'actors',
+        tableName: 'actors',
         timestamps: false,
       };
 

@@ -1,0 +1,24 @@
+<header>
+    <h3>Movies Digital House</h3>
+    <nav>
+      <div>
+        <ul class="nav justify-content-end">
+          <% if (locals.isAdmin) { %>
+          <li>
+            <a href="/movies/add">Crear Pelicula</a>
+          </li>
+          <% } %>
+  
+          <li>
+            <a href="/">Listado de Peliculas</a>
+          </li>
+  
+          <% if (locals.isLogged) { %>
+          <li><a href="/logout">Logout</a></li>
+          <% } else { %>
+          <li><a href="/register">Registrate</a></li>
+          <li><a href="/login">logueate</a></li>
+          <% } %>
+        </ul>
+      </div>
+    </nav>

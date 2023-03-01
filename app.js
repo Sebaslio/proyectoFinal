@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const path = require('path');
 const publicPath = path.join(__dirname, 'public');
 const moviesRoutes = require('./routes/movies');
-const path = require('path');
+
 
 
 const methodOverride = require('method-override');
@@ -58,6 +59,6 @@ app.get('/register', function (req, res) {
 // vistas ejs
 app.set('view engine', 'ejs');   
     
-app.listen(3000, () => { console.log('Server running on port 3000');
+app.listen(3030, () => { console.log('Server running on port 3000');
 
 });

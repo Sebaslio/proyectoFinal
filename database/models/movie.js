@@ -30,9 +30,9 @@ module.exports = (sequelize, dataTypes) => {
     genre_id: {
       type: dataTypes.INTEGER
     },
-    deleted_at: {
-      type: dataTypes.DATE
-    }
+    //deleted_at: {
+      //type: dataTypes.DATE
+    //}
   };
 
   let config = {
@@ -52,7 +52,7 @@ module.exports = (sequelize, dataTypes) => {
       as: 'actors',
       through: 'actor_movie',
       foreignKey: 'movie_id',
-      otherKey: 'actors_id',
+      otherKey: 'actor_id',
       timestamps: false,
     });
   }

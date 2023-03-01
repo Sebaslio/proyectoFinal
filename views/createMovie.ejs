@@ -1,0 +1,34 @@
+<%-include ('header') -%>
+<body>
+    <section>
+      <div class="centrado">
+        <form action="" method="post">
+          <label for="title">Título:</label>
+          <input class="forma" type="text" id="title" name="title" required /><br />
+  
+          <label for="rating">Calificación:</label>
+          <input class="forma" type="number" id="rating" name="rating" min="0" max="10" step="0.1" required /><br />
+  
+          <label for="awards">Premios:</label>
+          <input class="forma" type="number" id="awards" name="awards" min="0" /><br />
+  
+          <label for="release_date">Fecha de estreno:</label>
+          <input class="forma" type="date" id="release_date" name="release_date" required /><br />
+  
+          <label for="length">Duración (minutos):</label>
+          <input class="forma" type="number" id="length" name="length" min="0" required /><br />
+  
+          <label for="genres">Género:</label>
+          <select class="forma" name="genres">
+            <% for (let i = 0; i < genres.length; i++) { %>
+              <option value="<%= genres[i].id %>"><%= genres[i].name %></option>
+            <% } %>
+          </select>
+          <br />
+          <br />
+          <input type="submit" value="Crear película" />
+        </form>
+      </div>
+    </section>
+    <br />
+  </body>

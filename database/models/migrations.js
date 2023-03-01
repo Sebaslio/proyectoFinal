@@ -15,7 +15,7 @@ module.exports = (sequelize, dataTypes) => {
         },
 
         batch: {
-            type: dataTypes.INTERGER
+            type: dataTypes.INTEGER
         },
 
     };

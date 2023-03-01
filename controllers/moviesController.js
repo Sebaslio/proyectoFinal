@@ -3,7 +3,7 @@ let db = require('../database/models');
 let moviesController = {
   list: function (req, res) {
     db.Movies.findAll().then(function (movies) {
-      res.render('home', { movies: movies });
+      res.render('home.ejs', { movies: movies });
     });
   },
   
