@@ -1,8 +1,14 @@
-const { DataTypes } = require('sequelize');
-const db = require('../database');
+const { DataTypes, Sequelize } = require('sequelize');
+
+const sequelize = new Sequelize('database', 'root', 'rootroot', {
+  host: '127.0.0.2',
+  port: 3306,
+  dialect: 'mysql'
+});
+
 const Movie = require('./movie');
 
-const Director = db.define('Director', {
+const Director = sequelize.define('Director', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,

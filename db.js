@@ -1,12 +1,15 @@
 const { Sequelize } = require('sequelize');
-const ActorModel = require('./models/actor');
-const DirectorModel = require('./models/director');
-const GenreModel = require('./models/genre');
-const MovieModel = require('./models/movie');
+const ActorModel = require('./src/models/actor');
+const DirectorModel = require('./src/models/director');
+const GenreModel = require('./src/models/genre');
+const MovieModel = require('./src/models/movie');
 
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-  host: 'localhost',
-  dialect: 'mysql',
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: 'mysql'
+    // host: 'localhost',
+ // dialect: 'mysql',
 });
 
 const Actor = ActorModel(sequelize, Sequelize);
@@ -26,10 +29,5 @@ Movie.belongsTo(Director);
 sequelize.sync({ force: false })
   .then(() => console.log('Database and tables created'))
   .catch((err) => console.log(err));
-
-module.exports = {
-  Actor,
-  Director,
-  Genre,
-  Movie,
-};
+  
+module.exports = sequelize

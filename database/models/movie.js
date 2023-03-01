@@ -1,9 +1,15 @@
-const { DataTypes } = require('sequelize');
-const db = require('../database');
+const { DataTypes, Sequelize } = require('sequelize');
+const sequelize = new Sequelize('database', 'root', 'rootroot', {
+  host: '127.0.0.2',
+  port: 3306,
+  dialect: 'mysql'
+});
+
 const Genre = require('./genre');
 const Director = require('./director');
+const Actor = require('./actor');
 
-const Movie = db.define('Movie', {
+const Movie = sequelize.define('Movie', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -31,6 +37,5 @@ Movie.belongsToMany(Actor, { through: 'ActorMovie' });
 Genre.hasMany(Movie);
 Director.hasMany(Movie);
 Actor.belongsToMany(Movie, { through: 'ActorMovie' });
-
 
 module.exports = Movie;

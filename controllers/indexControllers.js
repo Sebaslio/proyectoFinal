@@ -15,7 +15,7 @@ const registro = (req, res) => {
 const crearUsuario = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    res.render('registro', { errors: errors.array() });
+    return res.render('registro', { errors: errors.array() }); //se le agrega un 'return' luego del if
   } else {
     const { nombre, email, password } = req.body;
     const hash = await bcrypt.hash(password, 10);
