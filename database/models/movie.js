@@ -1,41 +1,61 @@
-const { DataTypes, Sequelize } = require('sequelize');
-const sequelize = new Sequelize('database', 'root', 'rootroot', {
-  host: '127.0.0.2',
-  port: 3306,
-  dialect: 'mysql'
-});
+module.exports = (sequelize, dataTypes) => {
 
-const Genre = require('./genre');
-const Director = require('./director');
-const Actor = require('./actor');
+  let alias = 'Movies';
+  let cols = {
 
-const Movie = sequelize.define('Movie', {
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-    allowNull: false,
-  },
-  title: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  releaseYear: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  poster: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-});
+    id: {
+      type: dataTypes.INTEGER,
+      primaryKey: true,
+      autoincrement: true, 
+    },
 
-Movie.belongsTo(Genre, { foreignKey: 'genreId' });
-Movie.belongsTo(Director, { foreignKey: 'directorId' });
-Movie.belongsToMany(Actor, { through: 'ActorMovie' });
+    title: {
+      type: dataTypes.STRING
 
-Genre.hasMany(Movie);
-Director.hasMany(Movie);
-Actor.belongsToMany(Movie, { through: 'ActorMovie' });
+    },
+    rating:{
+      type: dataTypes.INTEGER
+    },
+    awards: {
+      type: dataTypes.STRING
+    },
+    release_date: {
+      type: dataTypes.DATE 
 
-module.exports = Movie;
+    },
+    length: {
+      type: dataTypes.INTEGER
+    },
+
+    genre_id: {
+      type: dataTypes.INTEGER
+    },
+    deleted_at: {
+      type: dataTypes.DATE
+    }
+  };
+
+  let config = {
+    tableName: 'movies',
+    timestamps: false,
+  };
+
+  const Movie = sequelize.define(alias, cols, config);
+
+  Movie.associate = function(models) {
+    Movie.belongsTo(models.Genres, {
+      as: 'genre',
+      foreignKey: 'genre_id',
+      
+    });
+    Movie.belongsToMany(models.Actors, {
+      as: 'actors',
+      through: 'actor_movie',
+      foreignKey: 'movie_id',
+      otherKey: 'actors_id',
+      timestamps: false,
+    });
+  }
+
+  return Movie;
+}

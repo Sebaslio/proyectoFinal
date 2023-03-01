@@ -1,66 +1,63 @@
 const express = require('express');
-const ejs = require('ejs');
-const Sequelize = require('sequelize');
 const bodyParser = require('body-parser');
 const app = express();
-
-app.set('view engine', 'ejs');
-
-app.use(express.static(__dirname + '/public'));
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-//require('dotenv').config();
+const publicPath = path.join(__dirname, 'public');
+const moviesRoutes = require('./routes/movies');
 const path = require('path');
 
-const sequelize = require('./database');
-// Importar cada modelo
-const Actor = require('./src/models/actor');
-const Director = require('./src/models/director');
-const Genre = require('./src/models/genre');
-const Movie = require('./src/models/movie');
 
-// Usar cada modelo
-Actor.findAll().then((actors) => console.log(actors));
-Director.findAll().then((directors) => console.log(directors));
-Genre.findAll().then((genres) => console.log(genres));
-Movie.findAll().then((movies) => console.log(movies));
-//const sequelize = new Sequelize('movies_db', 'root', 'password', {
-    //host: 'localhost',
-   // dialect: 'mysql'
- // });
-
- 
-
-  sequelize.sync().then(() => {
-    console.log('Database synced');
-  });
-
-const indexRoutes = require(path.join(__dirname, 'routes', 'indexRoutes'));
-  app.use('/', indexRoutes);
-  
-  
-const actorsRoutes = require('./routes/actorsRoutes');
-    app.use('/', actorsRoutes);
-
-const moviesRoutes = require('./routes/moviesRoutes');
-    app.use('/', moviesRoutes);  
-
-const directorsRoutes = require('./routes/directorsRoutes');
-    app.use('/api', directorsRoutes);
-
+const methodOverride = require('method-override');
+const session = require('express-session');
+const bcrypt = require('bcrypt');
 const usersRoutes = require('./routes/usersRoutes');
-    app.use('/api', usersRoutes);
+const userLoggedMiddleware = require('./middlewares/userLoggedMiddleware');
+const adminLoggedMiddleware = require('./middlewares/adminLoggedMiddleware');
+const cookieParser = require('cookie-parser');
 
-const genresRoutes = require('./routes/genresRoutes');
-    app.use('/api', genresRoutes);
 
-const reviewsRoutes = require('./routes/reviewsRoutes');
-    app.use('/api', reviewsRoutes);
+//  app.use middleWares
+app.use(userLoggedMiddleware);
+app.use(adminLoggedMiddleware);
 
-//const indexRoutes = require('./routes/indexRoutes');
-    //app.use('/', indexRoutes);
+//  metods Put y Delete
+app.use(methodOverride('_method')); 
+app.use(bodyParser.json());
+// para poder recibir las peticiones post
+app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(cookieParser());
+app.use(express.json());
+
+// app.use sesion 2minutos
+app.use(
+    session({
+      secret: 'lioSebas',
+      resave: false,
+      saveUninitialized: false,
+      name: 'DH movies',
+      cookie: { maxAge: 120000 },
+    })
+  );
+
+// routes
+app.use(express.static(publicPath));
+
+
+// definición rutas usuario
+app.use('/', usersRoutes);
+app.use('/', moviesRoutes);
+
+
+app.get('/', function (req, res) {
+  res.render('home', { movies: movies });
+});
+
+app.get('/register', function (req, res) {
+  res.render('register');
+});
+
+// vistas ejs
+app.set('view engine', 'ejs');   
     
-    
-app.listen(3000, () => console.log('Server running on port 3000'));
+app.listen(3000, () => { console.log('Server running on port 3000');
+
+});

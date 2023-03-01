@@ -1,21 +1,12 @@
 const express = require('express');
 const usersController = require('../controllers/usersController');
-
 const router = express.Router();
 
-// Rutas para editar y eliminar cuentas de usuarios
-router.get('/users/:id/edit', usersController.editUser);
-router.put('/users/:id', usersController.updateUser);
-router.delete('/users/:id', usersController.deleteUser);
 
-// Rutas para agregar y eliminar películas de la lista de favoritos
-router.post('/users/:id/favorites', usersController.addFavorite);
-router.delete('/users/:id/favorites/:movieId', usersController.removeFavorite);
-
-router.get('/signup', usersController.signup);
-router.post('/signup', usersController.createUser);
-router.get('/login', usersController.login);
-router.post('/login', usersController.authenticateUser);
-router.get('/logout', usersController.logout);
+router.get('/register', usersController.register);         // page of register users
+router.post('/register', usersController.store);          // action of register for users
+router.get('/login', usersController.login);             // page of login users
+router.post('/login', usersController.authenticate);    // action of login users
+router.get('/logout', usersController.logout);         // action of logout of users
 
 module.exports = router;

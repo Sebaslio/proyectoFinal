@@ -1,8 +1,0 @@
-const express = require('express');
-const router = express.Router();
-const actorsController = require('../controllers/actorsController');
-
-router.get('/actors', actorsController.getAllActors);
-router.get('/actors/:id', actorsController.getActorById);
-
-module.exports = router;

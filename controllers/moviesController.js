@@ -1,68 +1,92 @@
-const { Movie, Genre, Actor, Director, Sequelize: { Op } } = require('../models');
+let db = require('../database/models');
 
-const index = async (req, res) => {
-  try {
-    const movies = await Movie.findAll({ include: Genre });
-    res.render('index', { movies });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('An error has occurred');
-  }
-};
-
-const show = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const movie = await Movie.findByPk(id, { include: [Genre, Actor, Director] });
-    res.render('movie', { movie });
-  } catch (error) {
-    console.log(error);
-    res.status(500).send('An error has occurred');
-  }
-};
-
-const createReview = async (req, res) => {
-    const { title, content, rating } = req.body;
-    const userId = req.user.id; // Obtiene el id del usuario autenticado a través de la sesión
+let moviesController = {
+  list: function (req, res) {
+    db.Movies.findAll().then(function (movies) {
+      res.render('home', { movies: movies });
+    });
+  },
   
-    try {
-      const review = await Review.create({
-        title,
-        content,
-        rating,
-        userId,
-        movieId: req.params.id,
-      });
-  
-      res.status(201).json(review);
-    } catch (error) {
-      res.status(400).json({ error: error.message });
-    }
-  };
-
-  const searchMovies = async (req, res) => {
-    const { q } = req.query;
-  
-    try {
-      const movies = await Movie.findAll({
-        include: Genre,
+  add: function (req, res) {
+    db.Genres.findAll().then(function (genres) {
+      return res.render('createMovie', { genres: genres });
+    });
+  },
+  create: function (req, res) {
+    //aca creamos una nueva pelicula
+    db.Movies.create({
+      title: req.body.title,
+      rating: req.body.rating,
+      awards: req.body.awards,
+      release_date: req.body.release_date,
+      length: req.body.length,
+      genre_id: req.body.genres,
+    }).then(function () {
+      res.redirect('/');
+    });
+  },
+  edit: function (req, res) {
+    // dos pedidos asincronicos, van definidos por separado
+    let callMovie = db.Movies.findByPk(req.params.id); //hacemos el pedidos a peliculas
+    let callGenres = db.Genres.findAll(); //hacemos el pedido a generos
+    Promise.all([callMovie, callGenres]).then(function ([movie, genres]) {
+      // el then se ejecuta cuando ambas promesas se cumplen
+      res.render('editMovie', { movie: movie, genres: genres });
+    });
+  },
+  update: function (req, res) {
+    db.Movies.update(
+      {
+        title: req.body.title,
+        rating: req.body.rating,
+        awards: req.body.awards,
+        release_date: req.body.release_date,
+        length: req.body.length,
+        genre_id: req.body.genres,
+      },
+      {
         where: {
-          title: {
-            [Op.iLike]: `%${q}%`,
-          },
+          id: req.params.id,
         },
+      }
+    )
+      .then(function (result) {
+        // Si la actualización es exitosa, redirige a la página de detalles de la película actualizada
+        res.redirect('/movies/' + req.params.id);
+      })
+      .catch(function (error) {
+        // Si ocurre un error, manejarlo de la manera apropiada
+        console.log(error);
+        res.send('Error al actualizar la película');
       });
-  
-      res.render('search', { movies, q });
-    } catch (error) {
-      console.log(error);
-      res.status(500).send('An error has occurred');
-    }
-  };  
- 
-module.exports = {
-  index,
-  show,
-  createReview,
-  searchMovies,
+  },
+  delete: function (req, res) {
+    //borrado de pelicula de la DB con metodo Paranoid de sequelize activado.
+    db.Movies.destroy({
+      where: {
+        id: req.params.id,
+      },
+      paranoid: true, // activar el modo paranoid
+    })
+      .then((deletedRowCount) => {
+        if (deletedRowCount === 0) {
+          return res.status(404).send({ message: 'Registro no encontrado' });
+        }
+        // redirigir al listado de películas.
+        res.redirect('/');
+      })
+      .catch((error) => {
+        res.status(500).send({ message: 'Error al eliminar el registro' });
+      });
+  },
+
+  detail: function (req, res) {
+    db.Movies.findByPk(req.params.id, {
+      include: [{ association: 'genre' }, { association: 'actors' }],
+    }).then(function (movie) {
+      res.render('movieDetail', { movie: movie });
+    });
+  },
 };
+
+module.exports = moviesController;
