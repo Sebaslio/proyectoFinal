@@ -1,11 +1,11 @@
-function userLoggedMiddleware(req, res, next) {
-    res.locals.isLogged = false;
-  
-    if (req.session && req.session.userLogged) {
-      res.locals.isLogged = true;
+function adminLoggedMiddleware(req, res, next) {
+    res.locals.isAdmin = false;
+    
+    if (res.locals.isLogged && req.session.userLogged.rol === 1) {
+      res.locals.isAdmin = true;
     }
     next();
   }
   
-  module.exports = userLoggedMiddleware;
+  module.exports = adminLoggedMiddleware;
   
