@@ -48,6 +48,8 @@ app.use('/', usersRoutes);
 app.use('/', moviesRoutes);
 
 
+
+
 app.get('/', function (req, res) {
   res.render('home', { movies: movies });
 });

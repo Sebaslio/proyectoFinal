@@ -16,10 +16,16 @@
                 <li><%= movie.actors[i].first_name %> <%= movie.actors[i].last_name %></li>
               <% } %>
             </ul>
+            <form action="/movies/edit/<%= movie.id %>" method="get">
+                <button type="submit" class="btn btn-secondary">Editar</button>
+            </form>
             <% if (locals.isAdmin) { %>
-              <a href="/movies/edit/<%= movie.id %>">
-                <button class="btn btn-secondary">Editar</button>
-              </a>
+                <form action="/movies/edit/<%= movie.id %>" method="get">
+                    <button type="submit" class="btn btn-secondary">Editar</button>
+                </form>
+                <!-- <a href="/movies/edit/ "> -->
+              <!-- <button class="btn btn-secondary">Editar</button> --> 
+             <!-- </a> -->
               <form action="/movies/delete/<%= movie.id %>" method="post">
                 <br>
                 <button type="submit" class="btn btn-secondary">Borrar!</button>

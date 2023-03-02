@@ -30,4 +30,4 @@ development': {
       'dialect': 'mysql'
 
 
-Desde ya muchas gracias! 
+Desde ya muchas gracias!
