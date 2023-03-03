@@ -15,8 +15,8 @@ let usersController = {
 
     try {
       const user = await db.Users.create({
-        name,
-        email,
+        name: name,
+        email: email,
         password: hashedPassword,
         rol: 0, 
       });

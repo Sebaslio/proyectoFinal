@@ -15,9 +15,9 @@ module.exports = (sequelize, dataTypes) => {
       password: {
           type: dataTypes.STRING
       },
-      remember_token: {
-          type: dataTypes.STRING
-      },
+      //remember_token: {
+        //  type: dataTypes.STRING
+      //},
       rol: {
           type: dataTypes.INTEGER
       },
